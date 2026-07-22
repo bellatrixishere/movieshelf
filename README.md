@@ -1,16 +1,53 @@
-# React + Vite
+# Movie Shelf
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Movie Shelf é um projeto em React + Vite para criar uma aplicação de catálogo de filmes, com navegação entre páginas para visualizar, criar, editar e detalhar filmes.
 
-Currently, two official plugins are available:
+## O que o projeto faz
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Exibe a página inicial da aplicação
+- Permite navegar para páginas de criação e edição de filmes
+- Possui rotas para visualização dos detalhes de cada filme
+- Utiliza React Router para a navegação entre telas
 
-## React Compiler
+## Tecnologias utilizadas
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- React Router DOM
+- ESLint
 
-## Expanding the ESLint configuration
+## Como instalar
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Acesse a pasta do projeto:
+   ```bash
+   cd movie-shelf
+   ```
+
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+
+3. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+
+4. Abra o navegador na URL exibida no terminal, geralmente:
+   ```text
+   http://localhost:5173
+   ```
+
+## Scripts disponíveis
+
+- `npm run dev` — inicia o projeto em modo de desenvolvimento
+- `npm run build` — gera a build de produção
+- `npm run preview` — visualiza a build localmente
+- `npm run lint` — executa a verificação do ESLint
+
+## Estrutura principal
+
+- `src/pages` — páginas da aplicação
+- `src/components` — componentes reutilizáveis
+- `src/services` — integração com serviços e APIs
+- `src/styles` — arquivos de estilo
