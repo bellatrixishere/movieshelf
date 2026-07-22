@@ -1,15 +1,21 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
+
+import Home from "./pages/Home";
+import CreateMovie from "./pages/CreateMovie";
+import MovieDetails from "./pages/MovieDetails";
+import EditMovie from "./pages/EditMovie";
 
 function App() {
   return (
-    <div>
-      <h1>MovieShelf</h1>
-      <p>Seu catálogo de filmes.</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/movies/new" element={<CreateMovie />} />
+        <Route path="/movies/:id" element={<MovieDetails />} />
+        <Route path="/movies/edit/:id" element={<EditMovie />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
