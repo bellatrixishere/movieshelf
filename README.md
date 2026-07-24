@@ -1,53 +1,138 @@
-# Movie Shelf
+[README.md](https://github.com/user-attachments/files/30342892/README.md)
+# 🎬 MovieShelf
 
-Movie Shelf é um projeto em React + Vite para criar uma aplicação de catálogo de filmes, com navegação entre páginas para visualizar, criar, editar e detalhar filmes.
+Aplicação web para pesquisar filmes, montar sua própria coleção e acompanhar o que você já assistiu, está assistindo ou quer assistir.
 
-## O que o projeto faz
+**🔗 App publicado:** https://eba72690.movie-shelf.pages.dev
 
-- Exibe a página inicial da aplicação
-- Permite navegar para páginas de criação e edição de filmes
-- Possui rotas para visualização dos detalhes de cada filme
-- Utiliza React Router para a navegação entre telas
+---
 
-## Tecnologias utilizadas
+## Funcionalidades
 
-- React
-- Vite
-- React Router DOM
-- ESLint
+- Pesquisa de filmes usando a API pública do OMDb
+- Adicionar filmes encontrados à sua coleção pessoal
+- Marcar cada filme com status: **Quero assistir**, **Assistindo** ou **Assistido**
+- Filtrar a coleção por gênero
+- Ordenar a coleção por ano de lançamento ou por data em que foi adicionado
+- Remover filmes da coleção
+- Dados persistidos em banco de dados real (a coleção não se perde ao recarregar a página)
 
-## Como instalar
+---
 
-1. Acesse a pasta do projeto:
-   ```bash
-   cd movie-shelf
-   ```
+## Arquitetura
 
-2. Instale as dependências:
-   ```bash
-   npm install
-   ```
+```
+React (frontend)
+     │
+     ▼
+Cloudflare Worker (backend)
+     │
+     ├── Consulta a API OMDb
+     │
+     └── CRUD no Cloudflare D1 (banco de dados)
+```
 
-3. Inicie o servidor de desenvolvimento:
-   ```bash
-   npm run dev
-   ```
+O frontend nunca acessa a API do OMDb diretamente. Todas as requisições passam pelo Worker, que é o único lugar onde a chave da API fica armazenada (como *secret*, nunca exposta no navegador).
 
-4. Abra o navegador na URL exibida no terminal, geralmente:
-   ```text
-   http://localhost:5173
-   ```
+> **Observação:** este projeto não possui sistema de autenticação — a coleção é pública e compartilhada entre qualquer pessoa que acesse o site ou o endpoint do Worker. Isso é adequado para um projeto de portfólio/treinamento, mas não para um app multi-usuário real.
 
-## Scripts disponíveis
+---
 
-- `npm run dev` — inicia o projeto em modo de desenvolvimento
-- `npm run build` — gera a build de produção
-- `npm run preview` — visualiza a build localmente
-- `npm run lint` — executa a verificação do ESLint
+## Stack
 
-## Estrutura principal
+**Frontend**
+- React + Vite
+- React Router
+- Mantine UI
+- Tabler Icons
 
-- `src/pages` — páginas da aplicação
-- `src/components` — componentes reutilizáveis
-- `src/services` — integração com serviços e APIs
-- `src/styles` — arquivos de estilo
+**Backend**
+- Cloudflare Workers
+- Cloudflare D1 (banco SQL serverless)
+
+**API externa**
+- [OMDb API](https://www.omdbapi.com/)
+
+---
+
+## Estrutura do projeto
+
+```
+movie-shelf/              → frontend (este repositório)
+├── src/
+│   ├── components/
+│   │   └── MovieCard.jsx
+│   ├── pages/
+│   │   ├── Home.jsx
+│   │   ├── CreateMovie.jsx
+│   │   ├── MovieDetails.jsx
+│   │   └── EditMovie.jsx
+│   ├── services/
+│   │   └── api.js          → chamadas ao Worker
+│   └── utils/
+│       └── movieMapper.js  → converte os formatos de dados (OMDb / banco / app)
+
+movieshelf-worker/         → backend (repositório separado)
+├── src/
+│   └── index.js           → rotas: GET /search, GET/POST/PUT/DELETE /movies
+├── schema.sql             → estrutura da tabela `movies`
+└── wrangler.jsonc         → configuração do Worker e do banco D1
+```
+
+---
+
+## Rodando localmente
+
+### Backend (Worker)
+
+```bash
+cd movieshelf-worker
+npm install
+npx wrangler dev
+```
+
+Crie um arquivo `.dev.vars` na raiz do worker com sua chave da OMDb:
+```
+OMDB_API_KEY=sua_chave_aqui
+```
+
+### Frontend
+
+```bash
+cd movie-shelf
+npm install
+npm run dev
+```
+
+Por padrão, o `src/services/api.js` aponta para o Worker publicado. Para testar contra o Worker local, troque a constante `API_BASE_URL` para `http://localhost:8787`.
+
+---
+
+## Endpoints da API (Worker)
+
+| Método | Rota | Descrição |
+|---|---|---|
+| GET | `/search?title=` | Busca um filme na OMDb |
+| GET | `/movies` | Lista todos os filmes da coleção |
+| POST | `/movies` | Adiciona um filme à coleção |
+| PUT | `/movies/:id` | Atualiza o status de um filme |
+| DELETE | `/movies/:id` | Remove um filme da coleção |
+
+---
+
+## Deploy
+
+- **Frontend:** Cloudflare Pages
+- **Backend:** Cloudflare Workers
+- **Banco de dados:** Cloudflare D1
+
+```bash
+# Worker
+cd movieshelf-worker
+npx wrangler deploy
+
+# Frontend
+cd movie-shelf
+npm run build
+npx wrangler pages deploy dist
+```
