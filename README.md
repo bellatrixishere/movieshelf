@@ -1,9 +1,10 @@
-[README.md](https://github.com/user-attachments/files/30342892/README.md)
 # 🎬 MovieShelf
 
 Aplicação web para pesquisar filmes, montar sua própria coleção e acompanhar o que você já assistiu, está assistindo ou quer assistir.
 
 **🔗 App publicado:** https://eba72690.movie-shelf.pages.dev
+
+**🔗 Repositório:** https://github.com/bellatrixishere/movieshelf
 
 ---
 
@@ -57,8 +58,10 @@ O frontend nunca acessa a API do OMDb diretamente. Todas as requisições passam
 
 ## Estrutura do projeto
 
+Este é um repositório único (monorepo), contendo o frontend na raiz e o backend em uma subpasta:
+
 ```
-movie-shelf/              → frontend (este repositório)
+movie-shelf/                       → raiz do repositório (frontend)
 ├── src/
 │   ├── components/
 │   │   └── MovieCard.jsx
@@ -68,15 +71,15 @@ movie-shelf/              → frontend (este repositório)
 │   │   ├── MovieDetails.jsx
 │   │   └── EditMovie.jsx
 │   ├── services/
-│   │   └── api.js          → chamadas ao Worker
+│   │   └── api.js               → chamadas ao Worker
 │   └── utils/
-│       └── movieMapper.js  → converte os formatos de dados (OMDb / banco / app)
-
-movieshelf-worker/         → backend (repositório separado)
-├── src/
-│   └── index.js           → rotas: GET /search, GET/POST/PUT/DELETE /movies
-├── schema.sql             → estrutura da tabela `movies`
-└── wrangler.jsonc         → configuração do Worker e do banco D1
+│       └── movieMapper.js       → converte os formatos de dados (OMDb / banco / app)
+│
+└── movieshelf-worker/            → backend (Cloudflare Worker), dentro do mesmo repositório
+    ├── src/
+    │   └── index.js             → rotas: GET /search, GET/POST/PUT/DELETE /movies
+    ├── schema.sql                → estrutura da tabela `movies`
+    └── wrangler.jsonc            → configuração do Worker e do banco D1
 ```
 
 ---
@@ -91,15 +94,16 @@ npm install
 npx wrangler dev
 ```
 
-Crie um arquivo `.dev.vars` na raiz do worker com sua chave da OMDb:
+Crie um arquivo `.dev.vars` na raiz do worker (`movieshelf-worker/.dev.vars`) com sua chave da OMDb:
 ```
 OMDB_API_KEY=sua_chave_aqui
 ```
 
 ### Frontend
 
+Na raiz do repositório:
+
 ```bash
-cd movie-shelf
 npm install
 npm run dev
 ```
@@ -131,8 +135,8 @@ Por padrão, o `src/services/api.js` aponta para o Worker publicado. Para testar
 cd movieshelf-worker
 npx wrangler deploy
 
-# Frontend
-cd movie-shelf
+# Frontend (a partir da raiz do repositório)
+cd ..
 npm run build
 npx wrangler pages deploy dist
 ```
