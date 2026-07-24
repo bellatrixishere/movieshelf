@@ -1,6 +1,9 @@
-import { Card, Image, Text, Badge, Group } from "@mantine/core";
+import { Card, Image, Text, Badge, Group, Select, ActionIcon } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 
-function MovieCard({ movie }) {
+const STATUS_OPTIONS = ["Quero assistir", "Assistindo", "Assistido"];
+
+function MovieCard({ movie, onStatusChange, onDelete }) {
   return (
     <Card shadow="md" radius="md" withBorder>
       <Card.Section>
@@ -27,10 +30,20 @@ function MovieCard({ movie }) {
         <Badge color="blue">
           {movie.genre}
         </Badge>
+      </Group>
 
-        <Badge color="green">
-          {movie.status}
-        </Badge>
+      <Group mt="sm" justify="space-between">
+        <Select
+          data={STATUS_OPTIONS}
+          value={movie.status}
+          onChange={(value) => onStatusChange(movie.id, value)}
+          allowDeselect={false}
+          style={{ flex: 1 }}
+        />
+
+        <ActionIcon color="red" variant="light" onClick={() => onDelete(movie.id)}>
+          <IconTrash size={18} />
+        </ActionIcon>
       </Group>
     </Card>
   );
